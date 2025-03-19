@@ -1,6 +1,8 @@
 import docx
 from docx import Document
+import pandas as pd
 import matplotlib.pyplot as plt
+
 
 doc = docx.Document("lion.docx")
 symbols = [',', '.', '!', '?', ':', ';', '"', '*', '(', ')', '[', ']', '«', '»', '_', '—', '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
@@ -81,29 +83,22 @@ for letter in clear_letters:
 ###
 
 
-'''Создание таблицы word'''
+'''Создание таблицы Excel'''
 
-result_doc = Document()
-table = result_doc.add_table(rows = len(words_repetition) + 1, cols = 3) # +1 т.к. + название столбика
-table.style = 'Table Grid'
- 
-# пишем название столбиков таблицы
-hdr_cells = table.rows[0].cells
-for i, item in enumerate(['Слово', 'Частота встречи, раз', 'Частота встречи, %']):
-    p = hdr_cells[i].paragraphs[0]
-    p.add_run(item).bold = True
-###
+words_amount = [] # повторения каждого слова
+words_amount_sum = 0 # кол-во всех слов
+for key in words_repetition:
+    words_amount.append(words_repetition[key])
+    words_amount_sum += words_repetition[key]
 
-# заполнение таблицы
-words_column = table.columns[0].cells
-repeats_column = table.columns[1].cells
-percentages_column = table.columns[2].cells
-for index, word in enumerate(words_repetition):
-    words_column[index + 1].text = word # +1 чтобы не стирало название столбика
-    repeats_column[index + 1].text = str(words_repetition[word])
-    percentages_column[index + 1].text = "{:.4f}".format(words_repetition[word] / len(words_repetition) * 100)
-###
-result_doc.save('result.docx')
+words_rate = [] # повторения каждого слова в %
+for i in range(len(words_amount)):
+    words_rate.append(words_amount[i] / words_amount_sum * 100 )
+
+df = pd.DataFrame(list(words_repetition.items()), columns=['Слово', 'Частота встречи, раз'])
+df['Частота встречи, %'] = words_rate
+
+df.to_excel('result.xlsx', index = False)
 
 
 '''Создание гистограмммы'''
