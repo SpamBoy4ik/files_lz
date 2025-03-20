@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 
 doc = docx.Document("lion.docx")
-symbols = [',', '.', '!', '?', ':', ';', '"', '*', '(', ')', '[', ']', '«', '»', '_', '—', '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+symbols = [',', '.', '-', '!', '?', '"', '(', ')', ':', ';', '—', '*', '[', ']', '«', '»', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '/', '=', '№']
 input_data = []
 for paragraph in doc.paragraphs:
     input_data.append(paragraph.text)
